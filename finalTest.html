@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <style>
+        .itemList{
+            border: 3px solid skyblue;
+            border-radius: 10px;
+            padding: 10px;
+
+        }
+
+        hr {
+            border: 1px solid black;
+        }
+
+        .item {
+            border: 1px solid black;
+            border-radius: 10px;
+            padding: 12px;
+            scroll-margin-top: 3px;
+            margin: 10px;
+        }
+    </style>
+    <script>
+        //================================================================
+        //단어 토큰 (span) click 이벤트 handler
+        //click한 토큰 자신을 done영역으로 이동시킨다.
+        function tokenMove(){
+            //click한 자신(this)의 영역에 따라 다른 영역으로 이동시킨다.
+            //todo -> done / done -> todo
+            if(this.parentNode.getAttribute("id") == "Todo")
+                gid("Done").appendChild(this);
+            else
+                gid("Todo").appendChild(this);
+        }
+
+        //================================================================
+
+        //==================현재시간을 구해주는 함수=======================
+        function nowTime(){
+            let now = new Date();
+            return now.toLocaleString();
+        }
+
+        //==============버튼을 누르면 background의 색깔을 바꿈(웨안대?)=================
+        // function changeColorHandler(){
+        //     gid("mung").css("background-color", "lightpink")
+        // }
+
+        //=================단어를 적으면 Todolist에 들어감=================
+        function newItemHandler() {
+            if(event.keyCode == 13) {
+                this.value = this.value.trim(); //불필요한 좌우 여백삭제
+                if(this.value.length > 0){ //여백 삭제후에도 입력된 내용이 있으면
+                    let newItem = document.createElement("div");
+                    //삭제하는 버튼
+                    let newButton = document.createElement("button");
+                    //색깔을 바꿔주는 버튼
+                    let selectColor = document.createElement("button")
+                    let buttonCount = 0;
+                    newItem.innerHTML = this.value;
+                    $(newItem).append("<br>");
+                    newItem.innerHTML += nowTime();
+                    selectColor.innerHTML ="ChageColor!!"
+                    $(newButton).addClass("btn btn-primary")
+                    //추가되는 div태그에 class부여
+                    $(newItem).attr("id", "mung")
+                    //클릭 이벤트가 일어나면 부여된 class에 background-color를 바꿈
+                    //================================================================
+                    $(selectColor).click(function(){
+                        if(buttonCount==0){
+                            $("#mung").css("background-color", "white")
+                            buttonCount++;
+                            console.log(buttonCount)
+                        }
+                        else if(buttonCount==1){
+                            $("#mung").css("background-color", "lightpink")
+                            buttonCount++;
+                            console.log(buttonCount)
+                        }
+                        else if(buttonCount==2){
+                            $("#mung").css("background-color", "lightgreen")
+                            buttonCount++;
+                            console.log(buttonCount)
+                        }
+                        else if(buttonCount==3){
+                            $("#mung").css("background-color", "lightskyblue")
+                            buttonCount=0;
+                            console.log(buttonCount)
+                        }
+                        }
+                    )
+                    //================================================================
+                    $(selectColor).addClass("mdb-select md-form")
+                    newItem.appendChild(newButton)
+                    newItem.appendChild(selectColor)
+                    $(newItem).addClass("item");
+                    $(newItem).append("<br>");
+                    newItem.addEventListener('click', tokenMove);
+                    newButton.addEventListener('click', deletButtonHandler)
+                    gid("Todo").appendChild(newItem);
+                    this.value="";//입력 영역 삭제
+                }
+            }
+        }
+        
+        //================================================================
+        // function checkParentId(){
+        //     console.log(this.parentNode.getAttribute("id"));
+        // } 부모확인하는 함수
+        
+        //================================================================
+        
+        //================================================================
+
+        //================================================================
+        function deletButtonHandler(){
+            $(this.parentNode).hide();
+        }
+
+        //================================================================
+        function gid(id){
+            return document.getElementById(id);
+        }
+
+        //================================================================
+        window.onload = function(){
+            $("span").click(tokenMove);
+            $("#newItem").keydown(newItemHandler);
+            $("button").click(deletButtonHandler);
+            // $("#mung").click(changeColorHandler);
+            // $("span").mouseover(checkParentId);
+        }
+
+        //================================================================
+    </script>
+</head>
+<body>
+    <h1>Final Test</h1>
+    <hr>
+    <div>
+        <input class="inputMan" id="newItem" type="text" maxlength="20" placeholder="TodoList">
+    </div>
+    <div class="row">
+        <div class="col-md-4 col-md-offset">
+            <div id="Todo" class="itemList">
+                <h1>Todo-List</h1>
+                <hr>
+            </div>
+        </div>
+            <div class="col-md-4 col-md-offset">
+                <div id="Done" class="itemList">
+                    <h1>Done-List</h1>
+                    <hr>
+                </div>
+            </div>
+        </div>
+</body>
+</html>
